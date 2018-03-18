@@ -1,6 +1,8 @@
 function figure() {
 
     var gridString // "101 000 111"
+        , hullString // "0,2 0,1 1,1 1,0 2,0 2,1 3,1 3,2 0,2"
+        , hull
         , image
         , fname
         , img_center
@@ -89,16 +91,25 @@ function figure() {
                     lat: (imageOffset.y + imgsize / 2) * one_px_lat
                 };
 
-                var geojson_data = geojsonFigure(
+                // це для контурів
+
+                var geojson_data = geojsonHull(
                     img_center[1] - fig_corner_c.lng,
                     img_center[0] - fig_corner_c.lat,
                     blocksize * one_px_lng,
-                    blocksize * one_px_lat
-                );
+                    blocksize * one_px_lat);
+
+                //
+                // var geojson_data = geojsonFigure(
+                //     img_center[1] - fig_corner_c.lng,
+                //     img_center[0] - fig_corner_c.lat,
+                //     blocksize * one_px_lng,
+                //     blocksize * one_px_lat
+                // );
 
                 L.geoJSON(geojson_data, {
                     style: {
-                        color: "white",
+                        color: "yellow",
                         opacity: 1,
                         weight: 1,
                         fillColor: "white",
@@ -143,6 +154,21 @@ function figure() {
         grid = gridString.replace(/\s/g, "").split("").slice(0, figureSize.x * figureSize.y).map(toInt);
     }
 
+    my.hullString = function (value) {
+        if (!arguments.length) return hullString;
+        setHullString(value);
+        return my;
+    };
+
+    function setHullString(value) {
+        hullString = value;
+        hull = hullString.split(/\s+/).map(function(pair) {
+            pair = pair.split(",");
+            return {x: +pair[0], y: +pair[1]}; 
+        });
+        console.log(hull);
+    }
+
     my.figureSize = function (value) {
         if (!arguments.length) return figureSize;
         figureSize = value;
@@ -166,44 +192,50 @@ function figure() {
 
     function toInt(v) {return +v}
 
-    // parameters in degrees
-    function generateGeojson(left, top) {
+    // function geojson_square(left, top, w, h) {
+    //     return [[[left, top], [left + w, top], [left + w, top + h], [left, top + h]]]
+    // }
+    //
+    // function geojsonFigure(left, top, block_w, block_h) {
+    //     var polygons = [];
+    //     for (var i = 0; i < figureSize.y; i++)
+    //         for (var j = 0; j < figureSize.x; j++)
+    //             polygons.push({y: i, x: j});
+    //
+    //     var polygons_coords = polygons
+    //         .filter(function(p, i){ return grid[i] == 0})
+    //         .map(function(p, i) {
+    //             return {
+    //                 left: left + block_w * p.x,
+    //                 top: top + block_h * p.y
+    //             }
+    //         });
+    //
+    //     return {
+    //         type: "Feature",
+    //         geometry: {
+    //             type: "MultiPolygon",
+    //             coordinates: polygons_coords.map(function(pc){
+    //                 return geojson_square(pc.left, pc.top, block_w, block_h)
+    //             })
+    //         }
+    //     };
+    // }
 
+    function geojsonHull(left, top, block_w, block_h) {
+        var points = hull.map(function(p) {
+            return [left + block_w * p.x, top + block_h * p.y];
+        });
 
-    }
-
-
-    function geojson_square(left, top, w, h) {
-        return [[[left, top], [left + w, top], [left + w, top + h], [left, top + h]]]
-    }
-
-    function geojsonFigure(left, top, block_w, block_h) {
-        var polygons = [];
-        for (var i = 0; i < figureSize.y; i++)
-            for (var j = 0; j < figureSize.x; j++)
-                polygons.push({y: i, x: j});
-
-        var polygons_coords = polygons
-            .filter(function(p, i){ return grid[i] == 0})
-            .map(function(p, i) {
-                return {
-                    left: left + block_w * p.x,
-                    top: top + block_h * p.y
-                }
-            });
-
-        console.log(polygons_coords);
-
+        console.log(points);
 
         return {
             type: "Feature",
             geometry: {
                 type: "MultiPolygon",
-                coordinates: polygons_coords.map(function(pc){
-                    return geojson_square(pc.left, pc.top, block_w, block_h)
-                })
+                coordinates: [[points]]
             }
-        };
+        }
     }
 
     function inpx(value) {
