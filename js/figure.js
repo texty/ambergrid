@@ -7,8 +7,8 @@ function figure() {
         , fname
         , img_center
         , grid
-        , dx = 0.00543
-        , dy = 0.0033342
+        // , dx = 0.00543
+        // , dy = 0.0033342
         , imgsize = 1000
         , imageOffset = {x: 0, y: 0}
         , blocksize = 120
@@ -91,21 +91,13 @@ function figure() {
                     lat: (imageOffset.y + imgsize / 2) * one_px_lat
                 };
 
-                // це для контурів
+                // це Geojson слой для контуру фігури на карті
 
                 var geojson_data = geojsonHull(
                     img_center[1] - fig_corner_c.lng,
                     img_center[0] - fig_corner_c.lat,
                     blocksize * one_px_lng,
                     blocksize * one_px_lat);
-
-                //
-                // var geojson_data = geojsonFigure(
-                //     img_center[1] - fig_corner_c.lng,
-                //     img_center[0] - fig_corner_c.lat,
-                //     blocksize * one_px_lng,
-                //     blocksize * one_px_lat
-                // );
 
                 L.geoJSON(geojson_data, {
                     style: {
@@ -120,8 +112,6 @@ function figure() {
                 map.on('zoomstart', function() { map_container.classed("transparent", false)});
                 map.on('dragstart', function() { map_container.classed("transparent", false)});
             }
-
-
         });
     }
 
@@ -166,7 +156,6 @@ function figure() {
             pair = pair.split(",");
             return {x: +pair[0], y: +pair[1]}; 
         });
-        console.log(hull);
     }
 
     my.figureSize = function (value) {
@@ -187,7 +176,6 @@ function figure() {
             lat: c1.lat - c2.lat,
             lng: c1.lng - c2. lng
         }
-
     }
 
     function toInt(v) {return +v}
@@ -227,8 +215,6 @@ function figure() {
             return [left + block_w * p.x, top + block_h * p.y];
         });
 
-        console.log(points);
-
         return {
             type: "Feature",
             geometry: {
@@ -242,7 +228,6 @@ function figure() {
         return "" + value + "px";
     }
 
-    
     return my;
 }
 
