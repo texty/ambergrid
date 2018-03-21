@@ -12,6 +12,8 @@ function figure() {
             x: 3,
             y: 3
         }
+        // , backgroundSize = 500
+        , backgroundSize_pc = 1
         , _onClick = function() {console.log("empty stub")}
     ;
     
@@ -28,6 +30,7 @@ function figure() {
                 .attr("class", "grid-wrapper")
                 .style("background-image", "url('" + image + "')")
                 .style("background-position", imageOffset.x + "px " + imageOffset.y + "px")
+                .style("background-size", inpercents(backgroundSize_pc))
 
                 .selectAll("div.elementary-block")
                 .data(grid)
@@ -93,6 +96,10 @@ function figure() {
     };
 
     function toNumber(v) {return +v}
+
+    function inpx(value) {
+        return "" + value + "px";
+    }
 
     function inpercents(value) {
         return "" + value * 100 + "%";

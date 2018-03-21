@@ -7,8 +7,10 @@ function map() {
         , img_center
     // , dx = 0.00543
     // , dy = 0.0033342
-        , imgsize = 1000
+    //     , imgsize = 500
+        , imgsize_pc = 1
         , imageOffset = {x: 0, y: 0}
+        // , zoomLevel = 17
         ;
 
     var BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L';
@@ -30,13 +32,19 @@ function map() {
 
                 var rect = container.node().getBoundingClientRect();
 
+                // розмір в пікселях картинки на фоні
+                var imgsize = rect.width * imgsize_pc;
+                var zoomLevel = 18 + Math.log2(imgsize / 1000);
+
+                console.log(zoomLevel);
                 // для початку створимо карту, центруємо по центру картинки, просто щоб приблизно переміститись на ту територію
                 // і вирахувати точні ширини тайла в градусах для конкретної місцевості
 
                 var map = L.map(map_container.node(), {
                     // trackResize: true
                     zoomSnap: 0.01
-                }).setView(img_center, 18, true);
+                }).setView(img_center, zoomLevel, true);
+
 
 
                 // розмір половини картинки в градусах
@@ -48,7 +56,7 @@ function map() {
                 var newy = img_center[0] + ($(window).height() / 2 - (rect.top + imgsize/2 + imageOffset.y)) / imgsize * (half_img.lat*2);
 
                 // тепер поставимо правильні кординати центру екрана
-                map.setView([newy,  newx], 18, true);
+                map.setView([newy,  newx], zoomLevel, true);
                 var bingLayer = L.tileLayer.bing(BING_KEY).addTo(map);
 
                 var one_px_lng = half_img.lng / (imgsize / 2);
@@ -61,14 +69,14 @@ function map() {
 
                 // це Geojson слой для контуру фігури на карті
 
-                var blocksize_px = container.select('.elementary-block').node().getBoundingClientRect().width;
+                var blocksize = container.select('.elementary-block').node().getBoundingClientRect().width;
 
                 var geojson_data = geojsonHull(
                     img_center[1] - fig_corner_c.lng,
                     img_center[0] - fig_corner_c.lat,
-                    blocksize_px * one_px_lng,
-                    blocksize_px * one_px_lat);
-                console.log(geojson_data)
+                    blocksize * one_px_lng,
+                    blocksize * one_px_lat);
+                
                 L.geoJSON(geojson_data, {
                     style: {
                         color: "yellow",
@@ -84,7 +92,6 @@ function map() {
             };
         });
     }
-
 
     my.image = function (value) {
         if (!arguments.length) return image;

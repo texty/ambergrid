@@ -4,7 +4,7 @@ setUpFigure("#figure1", {
     gridString: "101 000",
     hullString: "0,2 0,1 1,1 1,0 2,0 2,1 3,1 3,2 0,2",
     image: '52.23236250000002_24.41434000000001_23_Jul_2015_GMT.jpg',
-    imageOffset: {x: -500, y: -222}
+    imageOffset: {x: 0, y: 0}
 });
 
 setUpFigure("#figure2", {
