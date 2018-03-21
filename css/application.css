@@ -1,8 +1,13 @@
-.tetris-figure .elementary-block {
-  display: inline-block;
-  vertical-align: top; }
-.tetris-figure .elementary-block.opaque {
-  background-color: white; }
+.tetris-figure {
+  display: flow-root; }
+  .tetris-figure .grid-wrapper {
+    display: flow-root; }
+  .tetris-figure .elementary-block {
+    float: left;
+    display: inline-block;
+    vertical-align: top; }
+  .tetris-figure .elementary-block.opaque {
+    background-color: white; }
 
 .map {
   position: fixed;
@@ -33,5 +38,18 @@
 body {
   margin: 0;
   padding: 0; }
+
+.wrapper-fixed {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  background-color: #1b6d85; }
+  .wrapper-fixed .grid-block {
+    float: left;
+    width: 11.11111%;
+    padding-bottom: 11.11111%;
+    background-color: transparent;
+    border-left: 1px solid #eee;
+    border-top: 1px solid #eee; }
 
 /*# sourceMappingURL=application.css.map */
