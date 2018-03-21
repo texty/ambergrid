@@ -6,13 +6,15 @@
     float: left;
     display: inline-block;
     vertical-align: top; }
+  .tetris-figure .elementary-block.transparent {
+    cursor: pointer; }
   .tetris-figure .elementary-block.opaque {
     background-color: white; }
 
 .map {
   position: fixed;
-  top: 0px;
-  bottom: 0px;
+  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   z-index: 1000; }
@@ -23,10 +25,15 @@
     z-index: 999;
     width: 30px;
     height: 30px;
-    background-color: white;
     right: 10px;
     top: 10px;
-    text-decoration: underline; }
+    color: white;
+    font-size: 30px;
+    cursor: pointer; }
+  .map .close-btn:hover {
+    color: yellow; }
+  .map .close-btn:before {
+    content: "\2715"; }
 
 .leaflet-container.transparent {
   background-color: rgba(255, 0, 0, 0); }

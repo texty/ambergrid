@@ -40,7 +40,8 @@ function figure() {
                 .classed("opaque", function(d) {return d})
                 .classed("transparent", function(d) {return !d})
                 .style("width", inpercents(1/figureSize.x))
-                .style("padding-bottom", inpercents(1/figureSize.x));
+                .style("padding-bottom", inpercents(1/figureSize.x))
+                .attr("title", "Клікніть щоб дивитись карту");
 
             container
                 .selectAll(".elementary-block.transparent")

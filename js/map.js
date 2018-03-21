@@ -11,6 +11,7 @@ function map() {
         , imgsize_pc = 1
         , imageOffset = {x: 0, y: 0}
         // , zoomLevel = 17
+        , map
         ;
 
     var BING_KEY = 'AuhiCJHlGzhg93IqUH_oCpl_-ZUrIE6SPftlyGYUvr9Amx5nzA-WqGcPquyFZl4L';
@@ -28,6 +29,7 @@ function map() {
                 .classed("hidden", true);
             
             my.showMap = function() {
+                map_container.classed("transparent", true);
                 map_container.classed("hidden", false);
 
                 var rect = container.node().getBoundingClientRect();
@@ -40,12 +42,17 @@ function map() {
                 // для початку створимо карту, центруємо по центру картинки, просто щоб приблизно переміститись на ту територію
                 // і вирахувати точні ширини тайла в градусах для конкретної місцевості
 
-                var map = L.map(map_container.node(), {
-                    // trackResize: true
-                    zoomSnap: 0.01
-                }).setView(img_center, zoomLevel, true);
+                var firstRender = !map;
 
+                if (firstRender) {
+                    map = L.map(map_container.node(), {
+                        // trackResize: true
+                        zoomSnap: 0.01
+                    });
+                    L.tileLayer.bing(BING_KEY).addTo(map);
+                }
 
+                map.setView(img_center, zoomLevel, true);
 
                 // розмір половини картинки в градусах
                 var half_img = coord_diff(map.containerPointToLatLng([imgsize/2, imgsize/2]), map.containerPointToLatLng([0, 0]));
@@ -57,7 +64,8 @@ function map() {
 
                 // тепер поставимо правильні кординати центру екрана
                 map.setView([newy,  newx], zoomLevel, true);
-                var bingLayer = L.tileLayer.bing(BING_KEY).addTo(map);
+
+                if (!firstRender) return;
 
                 var one_px_lng = half_img.lng / (imgsize / 2);
                 var one_px_lat = half_img.lat / (imgsize / 2);
@@ -89,6 +97,15 @@ function map() {
 
                 map.on('zoomstart', function() { map_container.classed("transparent", false)});
                 map.on('dragstart', function() { map_container.classed("transparent", false)});
+                
+                map_container.append("div")
+                    .attr("class", "close-btn")
+                    .attr("title", "Закрити")
+                    .on("click", function(){
+                        map_container.classed("hidden", true);
+                        console.log("map closed");
+                    })
+                
             };
         });
     }

@@ -1,8 +1,8 @@
 
 .map {
   position: fixed;
-  top: 0px;
-  bottom: 0px;
+  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
@@ -18,11 +18,18 @@
     z-index: 999;
     width: 30px;
     height: 30px;
-    background-color: white;
     right: 10px;
     top: 10px;
-    text-decoration: underline;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
   }
+
+  .close-btn:hover {
+    color: yellow;
+  }
+
+  .close-btn:before{ content: "\2715"; }
 }
 
 .leaflet-container.transparent {
