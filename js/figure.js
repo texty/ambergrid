@@ -6,7 +6,7 @@ function figure() {
         , grid
         // , dx = 0.00543
         // , dy = 0.0033342
-        , imageOffset = {x: 0, y: 0}
+        , imageOffsetPc = {x: 0, y: 0}
         , blocksize_pc = 0.11111111
         , figureSize = {
             x: 3,
@@ -36,7 +36,7 @@ function figure() {
                 .append("div")
                 .attr("class", "grid-wrapper")
                 .style("background-image", "url('" + image + "')")
-                .style("background-position", imageOffset.x + "px " + imageOffset.y + "px")
+                .style("background-position", inpercents(imageOffsetPc.x) + " " + inpercents(imageOffsetPc.y))
                 .style("background-size", inpercents(backgroundSize_pc))
 
                 .selectAll("div.elementary-block")
@@ -72,9 +72,9 @@ function figure() {
         return my;
     }
 
-    my.imageOffset = function (value) {
-        if (!arguments.length) return imageOffset;
-        imageOffset = value;
+    my.imageOffsetPc = function (value) {
+        if (!arguments.length) return imageOffsetPc;
+        imageOffsetPc = value;
         return my
     };
 

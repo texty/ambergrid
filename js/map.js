@@ -11,7 +11,8 @@ function map() {
         , img_center
     // , dx = 0.00543
     // , dy = 0.0033342
-        , imageOffset = {x: 0, y: 0}
+    //     , imageOffset = {x: 0, y: 0}
+        , imageOffsetPc = {x: 0, y: 0}
         , backgroundSize_pc
         , tileOriginalSize = 1000
         , map
@@ -62,7 +63,9 @@ function map() {
                 var half_img = coord_diff(map.containerPointToLatLng([imgsize/2, imgsize/2]), map.containerPointToLatLng([0, 0]));
 
                 // jquery рахує правильно, на відміну від простих нативних способів
-
+                
+                var imageOffset = {x: imageOffsetPc.x * (rect.width - imgsize), y: imageOffsetPc.y * (rect.height - imgsize)};
+                
                 var newx = img_center[1] + ($(window).width() / 2 - (rect.left + imgsize/2 + imageOffset.x)) / imgsize * (half_img.lng*2);
                 var newy = img_center[0] + ($(window).height() / 2 - (rect.top + imgsize/2 + imageOffset.y)) / imgsize * (half_img.lat*2);
 
@@ -126,9 +129,9 @@ function map() {
         return my;
     }
 
-    my.imageOffset = function (value) {
-        if (!arguments.length) return imageOffset;
-        imageOffset = value;
+    my.imageOffsetPc = function (value) {
+        if (!arguments.length) return imageOffsetPc;
+        imageOffsetPc = value;
         return my
     };
 
