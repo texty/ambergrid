@@ -23,6 +23,9 @@ setUpFigure("#figure3", {
     imageOffsetPc: {x: 0.3, y: 0.4}
 });
 
+d3.select("#finalmap").call(finalmap());
+
+
 
 function setUpFigure(selector, options) {
     var res = {};
@@ -47,3 +50,5 @@ function setUpFigure(selector, options) {
 
     return res;
 }
+
+
