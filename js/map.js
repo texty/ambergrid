@@ -1,3 +1,7 @@
+Math.log2 = Math.log2 || function(x) {
+        return Math.log(x) / Math.LN2;
+    };
+
 function map() {
 
     var
@@ -7,10 +11,9 @@ function map() {
         , img_center
     // , dx = 0.00543
     // , dy = 0.0033342
-    //     , imgsize = 500
-        , imgsize_pc = 1
         , imageOffset = {x: 0, y: 0}
-        // , zoomLevel = 17
+        , backgroundSize_pc
+        , tileOriginalSize = 1000
         , map
         ;
 
@@ -35,8 +38,9 @@ function map() {
                 var rect = container.node().getBoundingClientRect();
 
                 // розмір в пікселях картинки на фоні
-                var imgsize = rect.width * imgsize_pc;
-                var zoomLevel = 18 + Math.log2(imgsize / 1000);
+                var imgsize = rect.width * backgroundSize_pc;
+                
+                var zoomLevel = 18 + Math.log2(imgsize / tileOriginalSize);
 
                 console.log(zoomLevel);
                 // для початку створимо карту, центруємо по центру картинки, просто щоб приблизно переміститись на ту територію
@@ -125,6 +129,12 @@ function map() {
     my.imageOffset = function (value) {
         if (!arguments.length) return imageOffset;
         imageOffset = value;
+        return my
+    };
+
+    my.backgroundSize_pc = function (value) {
+        if (!arguments.length) return backgroundSize_pc;
+        backgroundSize_pc = value;
         return my
     };
 

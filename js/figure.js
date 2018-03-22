@@ -7,24 +7,31 @@ function figure() {
         // , dx = 0.00543
         // , dy = 0.0033342
         , imageOffset = {x: 0, y: 0}
-        , blocksize = 0.11111111
+        , blocksize_pc = 0.11111111
         , figureSize = {
             x: 3,
             y: 3
         }
-        // , backgroundSize = 500
-        , backgroundSize_pc = 1
-        , _onClick = function() {console.log("empty stub")}
+
+        , designBlockSize = 1280 / 9
+        , tileOriginalSize = 1000
+        , tileDesignSize = 500
+        
+        , storage = {_onClick: function() {console.log("empty stub")}}
     ;
     
     function my(selection) {
         selection.each(function() {
-
+            
+            var backgroundSize_pc = tileDesignSize / (designBlockSize * figureSize.x);
+            console.log(inpercents(backgroundSize_pc));
+            
+            
             var container = d3.select(this);
 
             container
-                .style("width", inpercents(blocksize * figureSize.x))
-                .style("height", inpercents(blocksize * figureSize.y))
+                .style("width", inpercents(blocksize_pc * figureSize.x))
+                .style("height", inpercents(blocksize_pc * figureSize.y))
 
                 .append("div")
                 .attr("class", "grid-wrapper")
@@ -45,13 +52,11 @@ function figure() {
 
             container
                 .selectAll(".elementary-block.transparent")
-                .on("click", _onClick);
-
-            // var map_container = container
-            //     .append("div")
-            //     .attr("class", "map transparent")
-            //     .attr("id", "map-" + figname)
-            //     .classed("hidden", true);
+                .on("click", function() {storage._onClick()});
+            
+            my.getBackgroundSize_pc = function() {
+                return backgroundSize_pc;
+            };
         });
     }
 
@@ -91,8 +96,8 @@ function figure() {
     };
 
     my.onClick = function (value) {
-        if (!arguments.length) return _onClick;
-        _onClick = value;
+        if (!arguments.length) return storage._onClick;
+        storage._onClick = value;
         return my;
     };
 
