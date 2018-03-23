@@ -38,20 +38,20 @@ function finalmap() {
                     L.tileLayer('http://{s}.texty.org.ua/maps/t3/{z}/{x}/{y}.png', {
                         maxZoom: 9
                     }).addTo(map);
-    
-                    map.setView([51.081851400000005, 27.3154423], 8, true);
-    
+
+                    // map.setView([51.081851400000005, 27.3154423], 8, true);
+                    map.fitBounds([[50.25022980000001,25.4251606],[51.913472999999996,29.205724]]);
+
                     // Squares1: 10+
                     var squares1_layer = L.geoJSON(squares1, {
                         style: {
                                 fillColor: "black" ,
-                                color: "yellow",
+                                color: "#98c336",
                                 weight: 1,
                                 opacity: 1,
-                                fillOpacity: 0.3,
+                                fillOpacity: 0.5,
                                 stroke: 1
                         }
-                        // minZoom: 10
                     });
                     squares1_layer.addTo(map);
 
@@ -63,10 +63,9 @@ function finalmap() {
                             color: "red",
                             weight: 1,
                             opacity: 1,
-                            fillOpacity: 0.3,
-                            stroke: 1
+                            fillOpacity: 0.5,
+                            stroke: 0
                         }
-                        // maxZoom: 10
                     });
                     squares9_layer.addTo(map);
 
