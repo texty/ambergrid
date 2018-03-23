@@ -14,43 +14,36 @@ function finalmap() {
             
             d3.queue()
                 .defer(d3.csv, "coordinates.csv")
-                .defer(d3.json, "process/squares.geojson")
-                .await(function(err, points, polygons) {
+                .defer(d3.json, "data/squares.1.geojson")
+                .defer(d3.json, "data/squares.9.geojson")
+                .await(function(err, points, squares1, squares9) {
                     if (err) throw err;
-    
-                    console.log(points);
-                    console.log(polygons);
 
                     map = L.map(container.node(), {
-                        // trackResize: true
-                        // zoomSnap: 0.01
                         minZoom: 6
                     });
+
+                    window.final_map = map;
     
-    
-                    var bingLayer = L.tileLayer.bing(BING_KEY, {minZoom: 13});
-                    // bingLayer.setMinZoom(13);
+                    // BING 11+
+                    var bingLayer = L.tileLayer.bing({
+                        bingMapsKey: BING_KEY,
+                        minZoom: 10,
+                        imagerySet: "AerialWithLabels"
+                    });
                     bingLayer.addTo(map);
-                    L.tileLayer('http://{s}.texty.org.ua/maps/w3/{z}/{x}/{y}.png', {
-                        maxZoom: 12
+
+
+                    // Light raster 6 - 10
+                    L.tileLayer('http://{s}.texty.org.ua/maps/t3/{z}/{x}/{y}.png', {
+                        maxZoom: 9
                     }).addTo(map);
     
                     map.setView([51.081851400000005, 27.3154423], 8, true);
     
-                    var geojsondata = points.map(function(d) {
-                       return {
-                           type: "Feature",
-                           geometry: {
-                               type: "Point",
-                               coordinates: [d.lon, d.lat]
-                           }
-                       }
-                    });
-
-                    var polygons_layer = L.geoJSON(polygons, {
-
+                    // Squares1: 10+
+                    var squares1_layer = L.geoJSON(squares1, {
                         style: {
-                                // radius: 1,
                                 fillColor: "black" ,
                                 color: "yellow",
                                 weight: 1,
@@ -58,38 +51,76 @@ function finalmap() {
                                 fillOpacity: 0.3,
                                 stroke: 1
                         }
-
-                        // pointToLayer: function (feature, latlng) {
-                        //     return L.circleMarker(latlng);
-                        // }
+                        // minZoom: 10
                     });
+                    squares1_layer.addTo(map);
 
-                    polygons_layer.addTo(map);
+
+                    // Squares9: 6 -- 10
+                    var squares9_layer = L.geoJSON(squares9, {
+                        style: {
+                            fillColor: "black" ,
+                            color: "red",
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 0.3,
+                            stroke: 1
+                        }
+                        // maxZoom: 10
+                    });
+                    squares9_layer.addTo(map);
 
 
-//                     var points_layer = L.geoJSON(geojsondata, {
-//
-//                         style: function (feature) {
-//                             return {
-//                                 radius: 1,
-//                                 fillColor: "white" ,
-//                                 color: "#000",
-//                                 weight: 1,
-//                                 opacity: 1,
-//                                 fillOpacity: 1,
-//                                 stroke: 0
-//                             };
-//                         },
-//
-//                         pointToLayer: function (feature, latlng) {
-//                             return L.circleMarker(latlng);
-//                         }
-//                     });
-//
-//                     points_layer.addTo(map);
+                    // var geojsondata = points.map(function(d) {
+                    //    return {
+                    //        type: "Feature",
+                    //        geometry: {
+                    //            type: "Point",
+                    //            coordinates: [d.lon, d.lat]
+                    //        }
+                    //    }
+                    // });
+                    //
+                    // var points_layer = L.geoJSON(geojsondata, {
+                    //
+                    //     style: function (feature) {
+                    //         return {
+                    //             radius: 1,
+                    //             fillColor: "white" ,
+                    //             color: "#000",
+                    //             weight: 1,
+                    //             opacity: 1,
+                    //             fillOpacity: 1,
+                    //             stroke: 0
+                    //         };
+                    //     },
+                    //
+                    //     pointToLayer: function (feature, latlng) {
+                    //         return L.circleMarker(latlng);
+                    //     }
+                    // });
+                    //
+                    // points_layer.addTo(map);
 
-                    // new L.StamenTileLayer("terrain-labels").addTo(map);
-                    // new L.StamenTileLayer("terrain-labels").addTo(map);
+
+                    // Для всіх НЕ TileLayer треба прописувати minZoom і maxZoom через хаки
+                    map.on("zoomend", onZoomEnd);
+                    onZoomEnd();
+
+                    function onZoomEnd() {
+                        var z = map.getZoom();
+
+                        if (z < 10 ) {
+                            squares9_layer.addTo(map);
+                            squares1_layer.removeFrom(map);
+                        } else if (z >= 10 &&  z < 12) {
+                            squares9_layer.addTo(map);
+                            squares1_layer.addTo(map);
+                        } else {
+                            squares1_layer.addTo(map);
+                            squares9_layer.removeFrom(map);
+                        }
+                    }
                 });
 
 

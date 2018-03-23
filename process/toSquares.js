@@ -1,19 +1,23 @@
+var args = process.argv.slice(2);
+
+var multiplier = args[0] || 1.0;
+
 var fs = require("fs");
 var d3 = require("d3");
 
-var dx = 0.00543 * 9;
-var dy = 0.0033342 * 9;
+var dx = 0.00543 * multiplier;
+var dy = 0.0033342 * multiplier;
 
-var data_text = fs.readFileSync("../coordinates.csv", "utf-8").toString();
+var data_text = fs.readFileSync("/dev/stdin", "utf-8").toString();
 var data = d3.csvParse(data_text);
 
 var extent = {
     lat: d3.extent(data, function(d) { return d.lat }),
     lon: d3.extent(data, function(d) { return d.lon })
 };
-
-console.log((+extent.lat[0] + (+extent.lat[1])) /2);
-console.log((+extent.lon[0] + (+extent.lon[1])) /2);
+//
+// console.log((+extent.lat[0] + (+extent.lat[1])) /2);
+// console.log((+extent.lon[0] + (+extent.lon[1])) /2);
 
 var lon_min = extent.lon[0] - dx/2;
 var lon_max = extent.lon[1] + dx/2;
